@@ -353,6 +353,10 @@ class TopologyOptimization3DLayered(TopologyOptimization2DParameters):
         print("rho shape:", rho.shape)
         print("dF_dEps original shape:", dF_dEps.shape)
         print("dF_dEps flattened shape:", dF_dEps.flatten().shape)
+        # 在topology.py中的calculate_gradients函数中:
+        if dF_dEps.size > rho.size:
+            # 去除边缘的额外点
+            dF_dEps = dF_dEps[1:-1, :, :]  # 从403x86x1裁剪到401x86x1
         assert rho.size == dF_dEps.size, f"维度不匹配: rho({rho.size}) vs dF_dEps({dF_dEps.size})"
         if num_of_freq == 1:
             topo_grad = tensor_jacobian_product(project_func, 0)(rho, dF_dEps.flatten())
