@@ -1,0 +1,188 @@
+switchtolayout;
+selectall;
+delete;
+
+
+
+#design_region_x = 3e-6;
+#design_region_y = 3e-6;
+#material=Si3N4 (Silicon Nitride) - Luke
+optx=40e-6;
+opty=8.5e-6;
+optz=0.33e-6;
+pcmz=0.03e-6;
+wglength=3.0e-6;
+wgwidth=1e-6;
+gap=5.1e-6;
+mode_width = 3 * wgwidth;
+
+
+# Input waveguide
+addrect;
+set('name', 'input waveguide');
+set('x span', wglength);
+set('y span', wgwidth);
+set('z span', optz);
+set('x', -(optx+wglength)/2);
+set('y', 0);
+set('z', 0);
+set('material', "Si3N4 (Silicon Nitride) - Luke");
+
+# add output waveguide top
+addrect;
+set('name','output waveguide top');
+set('x span', wglength);
+set('y span', wgwidth);
+set('z span', optz);
+set('x', (optx+wglength)/2);
+set('y', wgwidth/2+gap/2);
+set('z', 0);
+set('material', "Si3N4 (Silicon Nitride) - Luke");
+
+# add output waveguide bottom
+addrect;
+set('name','output waveguide bottom');
+set('x span', wglength);
+set('y span', wgwidth);
+set('z span', optz);
+set('x', (optx+wglength) / 2);
+set('y', -(wgwidth + gap) / 2);
+set('z', 0);
+set('material', "Si3N4 (Silicon Nitride) - Luke");
+
+# add design region
+addrect;
+set('name','center');
+set('x span', optx);
+set('y span', opty);
+set('z span', optz);
+set('x', 0);
+set('y', 0);
+set('z', 0);
+set('material', "Si3N4 (Silicon Nitride) - Luke");
+
+
+addrect;
+set('name','design region');
+set('x span', optx);
+set('y span', opty);
+set('z span', pcmz);
+set('x', 0);
+set('y', 0);
+set('z', (pcmz+optz)/2);
+set('material', "Si (Silicon) - Palik");
+
+
+## SOURCE
+addmode;
+set('name','forward_source');
+set('direction', 'Forward');
+set('injection axis', 'x-axis');
+set('x', -(optx+wglength)/2+1e-6);
+set('y', 0);
+set('z', 0);
+set('y span',mode_width);
+set('z span', 0.5e-6);
+set('wavelength start', 1.450e-6);
+set('wavelength stop', 1.650e-6);
+set('mode selection', 'fundamental TE mode');
+
+
+## FDTD
+addfdtd;
+set('dimension','3D');
+set('index',1.44);
+set('mesh accuracy',2);
+set("dx", 0.01e-6);
+set("dy", 0.01e-6);
+set('x', 0);
+set('x span', optx+2e-6);
+set('y', 0);
+set('y span', opty+1e-6);
+set('z', 0);
+set('z min', -0.3e-6);
+set('z max', 0.3e-6);
+set('auto shutoff min',1e-7);
+set("mesh type", 1);
+set("express mode", 1);
+
+
+## OPTIMIZATION FIELDS MONITOR IN OPTIMIZABLE REGION
+addpower;
+set('name','opt_fields');
+set('monitor type','2D Z-normal');
+set('x',0);
+set('x span',optx);
+set('y',0);
+set('y span',opty);
+
+## Plot monitor for all simu region
+addpower;
+set('name','plot fields');
+set('monitor type','2D Z-normal');
+set('x', 0);
+set('x span', optx+2e-6);
+set('y', 0);
+set('y span', opty+1e-6);
+
+
+## FOM FIELDS TOP
+addpower;
+set('name','fom1');
+set('monitor type','2D X-normal');
+set('x', (optx + wglength) / 2-1e-6);
+set('y', wgwidth / 2 + gap / 2);
+set('y span', wgwidth+1e-6);
+set('z', 0);
+set('z span', 0.5e-6);
+set("override global monitor settings", 1);
+set("use source limits",0);
+set("wavelength center",1.625e-6);
+set("wavelength span",0.05e-6);
+set("frequency points", 5);
+
+addmesh;
+set('name','fom1_mesh');
+set('override x mesh',true);
+set('override y mesh',false);
+set('override z mesh',false);
+set("dx", 0.02e-6);
+set('directly defined', 1);
+set('x', (optx + wglength) / 2-1e-6);
+set('x span', 0.04e-6);
+set('y', wgwidth / 2 + gap / 2);
+set('y span', wgwidth+1e-6);
+set('z', 0);
+set('z span', 0.5e-6);
+
+## FOM FIELDS BOTTOM
+addpower;
+set('name','fom2');
+set('monitor type','2D X-normal');
+set('x', (optx + wglength) / 2-1e-6);
+set('y', -(wgwidth / 2 + gap / 2));
+set('y span', wgwidth+1e-6);
+set('z', 0);
+set('z span', 0.5e-6);
+set("override global monitor settings", 1);
+set("use source limits",0);
+set("wavelength center",1.475e-6);
+set("wavelength span",0.05e-6);
+set("frequency points", 5);
+
+addmesh;
+set('name','fom2_mesh');
+set('override x mesh',true);
+set('override y mesh',false);
+set('override z mesh',false);
+set("dx", 0.02e-6);
+set('directly defined', 1);
+set('x', (optx + wglength) / 2-1e-6);
+set('x span', 0.04e-6);
+set('y', -(wgwidth / 2 + gap / 2));
+set('y span', wgwidth+1e-6);
+set('z', 0);
+set('z span', 0.5e-6);
+
+
+
