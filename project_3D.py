@@ -234,9 +234,9 @@ if __name__ == '__main__':
     initial_cond = np.random.rand(x_points * y_points)
 
     # 取消注释以检查梯度计算
-    check_grad(initial_cond, eps_min, eps_max, x_pos, y_pos, z_pos,filter_R * 1e-9, objective_function=J)
+    # check_grad(initial_cond, eps_min, eps_max, x_pos, y_pos, z_pos,filter_R * 1e-9, objective_function=J)
 
     # 运行优化
-    # runSim_Adam(initial_cond, eps_min, eps_max, x_pos, y_pos, z_pos,filter_R * 1e-9, objective_function=J)
+    runSim_Adam(initial_cond, eps_min, eps_max, x_pos, y_pos, z_pos,filter_R * 1e-9, objective_function=J)
     # eps_path = 'C:\\Users\\ZWR\\Desktop\\Reconfigurable\\WDM\\opts_40\\results\\saved_eps'
     # get_simu_results(eps_path, eps_min, eps_max, x_pos, y_pos,z_pos, filter_R * 1e-9, objective_function=J)
